@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>eNBio MAS 2.x</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      body { font-family: '맑은 고딕'; }
+      .sub-note {
+        font-size: 15px;
+        color: #999999;
+      }
+      .mas_config {
+	    max-width: 100px;
+        max-height:100px;
+      }
+      table {
+          border-collapse: collapse;
+          text-align: left;
+          line-height: 1.5;
+          margin : 20px 10px;
+      }
+      table th {
+          width: 100px;
+          padding: 10px;
+          font-weight: bold;
+          vertical-align: top;
+          border: 1px solid #ccc;
+      }
+      table td {
+          width: 200px;
+          padding: 10px;
+          vertical-align: top;
+          border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+layout: true
+
+---
+
+class: center, middle
+
+# eNBio-MAS 2.x
+### NITGEN
+
+---
+
+### eNBio-MAS 란?
+- 1:1, 1:N 인증을 위한 대규모 지문 인증 솔루션.
+- Massive Authentication Server
+
+---
+
+### eNBio-MAS 구조
+- DP Server .sub-note[(Dispatcher)]
+  - 각 서버 간의 부하 분산 관리 .sub-note[(로드벨런싱)]
+  - AU Server의 동기화 관리
+  - 라이센스 인증 처리
+- AU Server .sub-note[(Matching)]
+  - NSearch 엔진을 사용하여 지문 매칭
+- DM Server .sub-note[(DB Manager)]
+  - DBMS 연동
+  - 각각 AU에 지문 템플릿이 고르게 배분 될 수 있도록 관리 
+
+---
+
+### eNBio-MAS 특징
+- 서버 확장을 통해 기능 향상.sub-note[(인증시간 단축)]과 용량.sub-note[(최대 템플릿수)] 확장을 할 수 있음.
+- SDK를 제공하여 다양한 서비스와 연동 할 수 있음.
+- 다양한 OS 지원(Windows Server, 각종 Linux 배포판)
+
+---
+
+### eNBio-MAS 지원 환경
+#### OS
+- MS-Windows 2003 Server 64bit 이상
+- 일부 Linux 배포판
+  - Cent OS 6.6
+  - Red hat 6.2
+  - Debian 8
+  - Ubuntu 14
+     - Linux 에서는 Oracle DB만 연동 가능.
+
+#### DBMS
+- MS-SQL
+- Oracle
+
+---
+
+### eNBio-MAS 메모리 사용량
+| 탬플릿수  | 메모리사용량 (MB) |
+|----------:|-----------:|
+|   100,000 |    800 |
+|   200,000 |  1,600 |
+|   300,000 |  2,400 |
+|   400,000 |  3,200 |
+|   500,000 |  4,000 |
+| 1,000,000 |  8,000 |
+| 2,000,000 | 16,000 |
+
+---
+
+### eNBio-MAS 구성 방법 (1/4)
+#### 기본 구성
+.mas_config[![기본 구성](images/mas_config_for_expand0.PNG)]
+
+- 기본적으로 1대의 인증서버를 사용하여 구성하는 방법.
+
+---
+
+### eNBio-MAS 구성 방법 (2/4)
+#### 기능 향상을 위한 구성
+.mas_config[![기능 향상을 위한 구성](images/mas_config_for_expand1.PNG)]
+
+- 동시 요청이 많은 경우 인증서버를 확장하여 처리 능력을 향상 시키기 위한 구성 방법.
+
+---
+
+### eNBio-MAS 구성 방법 (3/4)
+#### 용량 확장을 위한 구성
+.mas_config[![용량 확장을 위한 구성](images/mas_config_for_expand2.PNG)]
+
+- 최대 Template이 2백만이 넘는 경우 인증 서버를 확장하여 최대 용량을 확장하기 위한 구성 방법.
+- 기능 향상 및 용량 확장을 위한 복합 구성도 가능.
+
+---
+
+### eNBio-MAS 구성 방법 (4/4)
+#### 이중화 구성
+.mas_config[![이중화 구성](images/mas_config_for_expand3.PNG)]
+
+- DP와 DM을 2대로 구성하여, 1대의 장애시에도 정상적인 서비스가 가능.
+
+---
+
+
+### FAQ
+
+- 구성 변경을 하는 기준은 무엇인가?
+  - AU Server 1기에 최대 2,000,000 템플릿을 처리할 수 있다.
+      - 2,000,000 템플릿을 초과하는 경우 용량 확장을 위한 구성이 필요하다.
+
+  - DP의 요청 Queue의 최대 크기는 100이다. 
+      - 요청에 대한 누적 건수가 100을 초과하면 용량 확장을 위한 구성이 필요하다.
+      - (초당 요청 건수 - 초당 처리 건수) >= 100
+
+- IPv6을 지원하나?
+ - 지원한다. 단, 새로 컴파일을 해서 별도 Binary로 제공 해야 한다.
+
+---
+
+### FAQ
+
+- License 제약을 어떻게 줄 수 있나?
+  - 최대 사용자, 최대 템플릿, 기간으로 줄 수 있다.
+
+- Linux 배포판은 어떤 것들을 지원하나?
+  - Docker 1.6.2 이후 버전이 설치 가능한 모든 Linux 배포판을 지원한다.
+     - http://docs.docker.com/installation/
+     
+  - 동작이 확인된 버전
+     - Cent OS 6.6
+     - Debian 8
+     - Red hat 6.2
+     - Ubuntu 14
+     - Ubuntu 15
+
+---
+
+### FAQ
+
+- eNBio-MAS SDK는 어떤 언어를 지원하나?
+  - eNBio-MAS SDK는 COM-Object 형태로 제공된다.<br/>COM-Object와 연동할 수 있는 모든 언어를 지원하며 C#, C++ Sample code를 제공한다.
+
+- ID 하나로 동시에 접속을 할 수 있나?
+  - WEB 방식의 연동이 필요한 경우 동시 접속 체크가 불필요 할 수도 있다. eNBio-MAS가 설치된 경로의 DPServer.ini 설정파일의 LOGIN에 정의된 값을 1로 수정하고, DP Service를 재기동 하면 동시 접속이 가능 하다.
+```ini
+[OPTION]
+LOGIN=0
+```
+
+---
+
+### FAQ
+
+- Oracle 연동을 TNS Alias를 사용할 수 있나?
+  - eNBio-MAS가 설치된 경로의 설정파일의 내용에서 IP 부분에 TNS-Alias을 넣고, eNBio-MAS Service를 재기동 한다.
+  - DPServer.ini
+```ini
+[DBMS_SETTING]
+# 1: MSSQL 2:ORACLE
+DB_TYPE=2
+IP=ORCL
+SID=
+```
+  - DMServer.ini
+```ini
+[DBMS_SETTING_1]
+# 1: MSSQL 2:ORACLE
+DB_TYPE=2
+IP=ORCL
+SID=
+```
+---
+
+### FAQ
+
+- eNBio-MAS 설치를 위해서 의존성 Package나 Library가 있나?
+    - 공통
+        - DBMS: MS-SQL 또는 Oracle이 미리 설치되어 있어야 한다.
+    - Oralce
+        - Oracle에서 정식 배포하는 Oralce Client가 설치되어 있어야 한다.
+            - http://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-win64soft-094461.html
+            - win64_11gR2_clinet.zip의 압축을 풀고, administrator mode를 설치 해야 한다.
+    - Linux 
+        - Docker 1.6.2 이상
+    - NGNetManager.exe
+        - Microsoft .NET Framework 4.0
+    - MasDemo.exe
+        - Microsoft Visual C++ 2010 Redistributable Package
+
+---
+
+### 참고 자료
+
+- eNBio-MAS OS별 성능 비교
+    - http://todo.unioncomm.co.kr/issues/3462
+
+- eNBio-MAS 1:1 인증 동시 처리 성능 테스트
+    - http://todo.unioncomm.co.kr/issues/3743
+
+- 더 많은 FAQ
+    - svn://211.172.235.254/svn/SW_MAS_2.X_MP/trunk/Doc/FAQ
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

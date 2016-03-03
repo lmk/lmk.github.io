@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    <title>eNBio-MAS 2.x FAQ</title>
+    
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/marked.js"></script>
+    
+    <script type="text/javascript" charset="utf-8">
+    // answer 항목에 Markdown 문법을 지원 합니다.
+
+    var FAQ = [
+      { 
+      	  category: "일반적인 질문"
+      	, question: "MAS 란 무엇입니까?"
+      	, answer: "정식 제품명은 `eNBio-MAS` 이고, 1:1 인증, 1:N 인증을 지원하는 `지문 인증 솔류션` 입니다." 
+      }, { 
+          category: "일반적인 질문"
+        , question: "MAS는 어떻게 구성되어 있습니까?"
+        , answer: "DP Service, DM Service, AU Service, DBMS(별매) 로 구성되어 있습니다.\n\n"
+               + "- DP Service: Client 연동 및 로드벨런싱, 서버 상태 모니터링, 라이센스 인증 처리를 합니다.\n"
+               + "- AU Service: 대량의 지문 인증을 빠르게 처리를 위한 인증 서버 입니다.\n" 
+               + "- DM Service: DBMS 연동 처리와 각각 AU에 지문 템플릿이 고르게 배분 될 수 있도록 관리합니다." 
+      }, { 
+          category: "일반적인 질문"
+        , question: "OS는 어떤 것을 지원하나요?"
+        , answer: "`MS-Windows 2003 Server 64bit 이상`과 `일부 Linux 계열(redhat 6.2, centos 6.6)`을 지원합니다." 
+      }, { 
+          category: "일반적인 질문"
+        , question: "DB는 어떤 것을 지원하나요?"
+        , answer: "`MS-SQL 2005 이상`과 `Oracle 10G 이상`을 지원합니다." 
+      }, { 
+          category: "일반적인 질문"
+        , question: "MAS 설치를 위한 권장 사양은 어떻게 되나요?"
+        , answer: "| 항목  | 사양 |\n"
+                + "|:---------:|:----------|\n"
+                + "| OS  | Windwos 2008 Server 64Bit |\n"
+                + "| CPU | i7 이상 |\n"
+                + "| RAM |  4G 이상 |\n"
+                + "| DBMS |  MS-SQL 2008 |"
+      }, { 
+          category: "일반적인 질문"
+        , question: "메모리 사용량은 어떻게 되나요?"
+        , answer: "수용하려는 템플릿수에 따라 메모리 사용량이 다릅니다. 1백만 템플릿에 8G, `2백만 템플릿에 16G`가 필요합니다.\n\n" 
+                + "| 탬플릿수  | 메모리사용량 (MB) |\n"
+                + "|----------:|-----------:|\n"
+                + "|   100,000 |    800 |\n"
+                + "|   200,000 |  1,600 |\n"
+                + "|   300,000 |  2,400 |\n"
+                + "|   400,000 |  3,200 |\n"
+                + "|   500,000 |  4,000 |\n"
+                + "| 1,000,000 |  8,000 |\n"
+                + "| 2,000,000 | 16,000 |\n"
+      }, { 
+          category: "일반적인 질문"
+        , question: "서버 이중화를 지원하나요?"
+        , answer: "`기능 향상`, `용량 확장`을 위한 이중화는 지원하지만, Failover를 위한 이중화는 지원되지 않습니다." 
+      }, { 
+          category: "일반적인 질문"
+        , question: "IPv6 을 지원하나요?"
+        , answer: "MAS 2.x은 `IPv6을 지원` 합니다." 
+      }, { 
+          category: "일반적인 질문"
+        , question: "라이선스 정책은 어떻게 되나요?"
+        , answer: "장비, 기간, 템플릿수 등으로 결정됩니다. 자세한 것은 영업부서 문의 하세요." 
+      }, { 
+          category: "설치관련 질문"
+        , question: "License 파일을 등록 했는데, MAS가 동작하지 않습니다."
+        , answer: "License 파일을 등록하고 NGConfig로 등록된 내용을 확인 할 수 있습니다. 아래 항목들을 확인 해 보고 이상이 없는 경우 고객센터로 문의 해주시기 바랍니다.\n\n"
+                  + "- 오늘 날짜가 `License 기간`내에 포함 되어야 합니다.\n"
+                  + "- License 정보의 `MAC Address`와 장비의 MAC가 일치해야 합니다.\n"
+                  + "- License 정보의 각 모듈 `ID`가 Config파일의 ID와 일치해야 합니다." 
+      }, { 
+          category: "설치관련 질문"
+        , question: "계약한 최대 템플릿 갯수를 늘리고 싶습니다."
+        , answer: "기본적으로 License 갱신 해야 하며, 총 템플릿 갯수가 2백만이 넘는 경우 AU 서버 장비를 증설 해야 합니다."
+      }, { 
+          category: "설치관련 질문"
+        , question: "6백만 템플릿을 지원하나요?"
+        , answer: "AU 서버 1대당 최대 200만 템플릿을 지원 합니다. 6백만 템플릿을 사용하려면, `AU 서버 3대`로 구성 하셔야 합니다." 
+      }, { 
+          category: "설치관련 질문"
+        , question: "동시 접속 가능한 Client 개수는 어떻게 되나요?"
+        , answer: "기본값은 `50`개 입니다.\n\n `DPServer.ini` 설정파일의 `NC_MAX_CLIENT_NUM`에 정의된 값을 수정하면 `동시 접속 최대 값`을 수정할 수 있습니다." 
+      }, { 
+          category: "설치관련 질문"
+        , question: "MAS에 접속 할때, 한개의 ID로 한명만 접속 할 수 있나요?"
+        , answer: "기본값은 `동시 접속 불가` 입니다.\n\n `DPServer.ini` 설정파일의 `LOGIN`에 정의된 값을 `1`로 수정하고, DP Service를 재기동 하면 동시 접속을 허용할 수 있습니다." 
+      }, { 
+          category: "개발관련 질문"
+        , question: "Application 에서 MAS 와 연동 하려면 어떻게 하나요?"
+        , answer: "연동을 위한 `MAS 2.x SDK`를 제공되며, `C#`과 `C++` Sample 코드가 포함되어 있습니다." 
+      }, { 
+          category: "설치관련 질문"
+        , question: "Linux도 지원 하나요?"
+        , answer: "아래와 같은 리눅스 배포판을 지원 합니다.\n\n" 
+                + "- Cent OS 6.6\n"
+                + "- Debian 8\n"
+                + "- Red hat 6.2\n"
+                + "- Ubuntu 14\n"
+                + "- Ubuntu 15\n\n"
+                + "`MAS를 Linux에 설치하는 경우 DBMS는 Oracle만 연동 가능` 합니다.\n\n"
+                + "추가적인 리눅스 배포판 종류와 버전을 문의 주시면, 지원 여부를 알려드리겠습니다.\n"
+      }, { 
+          category: "설치관련 질문"
+        , question: "MS-SQL 연결이 되지 않습니다."
+        , answer: "MAS 2.x는 MS-SQL과 TCP 통신을 합니다. SQL Server Configuration Manager에서 TCP/IP 설정을 Enable 시키고, Propert 창에서 TCP 포트를 지정해 주어야 합니다." 
+      }
+    ]
+    </script>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="page-header">
+    <h1>eNBio-MAS 2.x FAQ <small>Massive Authentication Server</small></h1>
+</div>
+
+<div class="container tool-bar">
+    <div class="tool" id="expend-all">모두 펼치기</div>    
+</div>
+
+
+<!-- FAQ - START -->
+<div class="container">
+    <br />
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        이 문서의 저작권은 <strong>NITGEN Co., Ltd.</strong>에 있습니다.
+    </div>    
+    <br />
+    <div class="panel-group" id="accordion">
+    </div>
+</div>
+
+<style>
+    .faqHeader {
+        font-size: 27px;
+        margin: 20px;
+    }
+    
+    .tool-bar {
+    	text-align: right;
+    }
+    
+    .tool {
+    	font-size: 12px;
+    	color: #999999;
+    }
+
+    .panel-heading [data-toggle="collapse"]:after {
+        font-family: 'Glyphicons Halflings';
+        content: "\e072"; /* "play" icon */
+        float: right;
+        color: #F58723;
+        font-size: 18px;
+        line-height: 22px;
+        /* rotate "play" icon from > (right arrow) to down arrow */
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+
+    .panel-heading [data-toggle="collapse"].collapsed:after {
+        /* rotate "play" icon from > (right arrow) to ^ (up arrow) */
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+        color: #454444;
+    }
+    
+    .panel-body table {
+		margin:15px 0;
+		border:0;
+    }
+    .panel-body th {
+		margin:15px 0;
+		font-weight:bold;
+		background-color:#dddddd;
+		color:#cccccc
+		border: 1px solid #cccccc;
+		border-width:1px
+    }
+    
+	.panel-body th,.panel-body td {
+		font-size:0.95em;
+		text-align:center;
+		padding:4px;
+		border-collapse:collapse;
+	}
+	.panel-body td {
+		border: 1px solid #cccccc;
+		border-width:1px
+	}
+	.panel-body tr {
+		border: 1px solid #ffffff;
+	}
+    
+</style>
+
+<!-- FAQ - END -->
+
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+	function createHtmlFAQ(q, a, id)
+	{
+		return (
+          "<div class=\"panel panel-default\">" +
+          "    <div class=\"panel-heading\">" +
+          "        <h4 class=\"panel-title\">" +
+          "            <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse"+id+"\">"+q+"</a>" +
+          "        </h4>" +
+          "    </div>" +
+          "    <div id=\"collapse"+id+"\" class=\"panel-collapse collapse\">" +
+          "        <div class=\"panel-body\">" +
+          "            " + marked(a) +
+          "        </div>" +
+          "    </div>" +
+          "</div>\n");
+	}
+	
+	function drawFAQ()
+	{
+		var cArray = [];
+		for(i in FAQ)
+		{
+			var cItem = {};
+			var indexCategory = -1;
+			for(j in cArray)
+			{
+				if (cArray[j].text == FAQ[i].category) {
+					indexCategory = j;
+					break;
+				}
+			}
+			
+			if (indexCategory == -1) {
+				cItem.text = FAQ[i].category;
+				cItem.html = createHtmlFAQ(FAQ[i].question, FAQ[i].answer, i);
+				cArray.push(cItem);
+			} else {
+				cArray[indexCategory].html += createHtmlFAQ(FAQ[i].question, FAQ[i].answer, i);
+			}
+		}
+		
+		var html = "";
+		
+		for(i in cArray)
+		{
+			html += "<div class=\"faqHeader\">"+cArray[i].text+"</div>\n" + cArray[i].html + "<br />"
+		}
+		
+		$("#accordion").html($(html));
+		$(".accordion-toggle:first").click();	
+	}
+
+	$(document).ready(function(){
+
+		drawFAQ();
+		
+		$("#expend-all").click(function(){
+				$(".accordion-toggle").removeClass("collapsed");
+				$(".panel-collapse").addClass("in").css("height","auto");
+		});
+		
+	});
+</script>
+
+</body>
+</html>
