@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source code to Document (using AI)</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/theme/black.css" id="theme">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/highlight/monokai.css">
+    <!-- 
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/black.css" id="theme">
+
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">  
+    -->
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- 타이틀 -->
+            <section>
+                <h2>코드로 문서 작성 자동화</h2>
+                <h4>AI 활용 삽질기..</h4>
+                <p>
+                    <small>한솔인티큐브 이명규</small>
+                </p>
+            </section>
+
+            <!-- 소개 -->
+            <section>
+                <h3>개발자가 가장 싫어하는 것은?</h3>
+                <p style="font-size: 0.9em;"><span class="fragment">변수명/함수명 짓기 (네이밍)</span></p>
+                <p style="font-size: 0.9em;"><span class="fragment">엉망진창인 코드 유지보수</span></p>
+                <p style="font-size: 0.9em;"><span class="fragment">문서 작성!!</span></p>
+            </section>
+
+            <!-- deepwiki-open 설명 -->
+            <section>
+                <section style="position: relative;">
+                    <img src="images/Deepwiki.png" data-preview-image>
+                    <div style="position: absolute; width: 30%; right: 0; top: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(50, 50, 50, 0.9); color: #fff; padding: 20px; font-size: 0.8em; text-align: left;">
+                        <h4>Deepwiki-open</h4>
+                        <p style="font-size: 0.6em;">DeepWiki는 GitHub, GitLab 또는 BitBucket 저장소를 위한 아름답고 상호작용 가능한 위키를 자동으로 생성합니다! 저장소 이름만 입력하면 DeepWiki가 다음과 같은 작업을 수행합니다
+                            <ul style="font-size: 0.5em;">
+                                <li>코드 구조 분석</li>
+                                <li>포괄적인 문서 생성</li>
+                                <li>모든 기능의 작동 방식을 설명하는 시각적 다이어그램 생성</li>
+                                <li>모든 내용을 탐색하기 쉬운 위키로 구성</li>
+                            </ul>
+                        </p>
+                    </div>
+                </section>                    
+                <section>
+                    <h3>지원하는 모델 제공자</h3>
+                    <ul>
+                        <li>Google API</li>
+                        <li>OpenAI API</li>
+                        <li>OpenRouter API</li>
+                        <li>Azure OpenAI API</li>
+                        <li><span class="fragment highlight-red">Ollama</span><span style="display: inline-block" class="fragment fade-right">: Private Model Provider</span></li>
+                    </ul>
+                </section>
+
+                <!-- deepwiki-open 설치 및 실행 -->
+                <section>
+                    <h4>deepwiki-open 설치</h4>
+                    <pre><code data-trim data-noescape>
+$ git clone https://github.com/AsyncFuncAI/deepwiki-open.git
+$ python3.9 -m poetry install
+                    </code></pre>
+                    <h4>deepwiki-open 실행</h4>
+                    <pre><code data-trim data-noescape>
+$ python3.9 -m poetry run python -m api.main
+$ npm run dev
+                    </code></pre>
+                </section>                
+            </section>
+
+            <!-- Ollama 설치, 외부 접근 설정 -->
+            <section>
+                <section>
+                    <h3>Ollama 설치</h3>
+                    <pre style="font-size: 0.4em;" data-id="code-animation"><code class="language-bash" data-trim data-noescape data-line-numbers="1,15-17">
+    $ curl -fsSL https://ollama.com/install.sh | sh
+    >>> Installing ollama to /usr/local
+    >>> Downloading Linux amd64 bundle
+    ######################################################################## 100.0%
+    >>> Creating ollama user...
+    >>> Adding ollama user to render group...
+    >>> Adding ollama user to video group...
+    >>> Adding current user to ollama group...
+    >>> Creating ollama systemd service...
+    >>> Enabling and starting ollama service...
+    Created symlink /etc/systemd/system/default.target.wants/ollama.service -> /etc/systemd/system/ollama.service.
+    >>> The Ollama API is now available at 127.0.0.1:11434.
+    >>> Install complete. Run "ollama" from the command line.
+    WARNING: No NVIDIA/AMD GPU detected. Ollama will run in CPU-only mode.
+    $ ps -ef | grep ollama
+    322:ollama    555097       1  0 08:41 ?        00:00:00 /usr/local/bin/ollama serve
+    326:sms       555141  554854  0 08:50 pts/0    00:00:00 grep --color=auto -n ollama
+    
+                    </code></pre>
+                </section>
+                <section>
+                    <h3>Ollama 외부 접근 설정</h3>
+                    <pre><code class="language-bash" data-trim data-noescape>
+    $ sudo systemctl edit ollama.service
+    [Service]
+    Environment="OLLAMA_HOST=0.0.0.0"
+
+    $ sudo systemctl daemon-reload
+    $ sudo systemctl restart ollama
+                    </code></pre>
+                    <br/>
+                    <p class="fragment">Provider만 설치한것으로, 두뇌(모델)은 별도설치</p>
+                </section>                
+            </section>
+
+            <!-- Ollama 모델 선택 및 설치, 설정 -->
+            <section>
+                <section data-auto-animate data-markdown style="font-size: 0.7em;">
+## Ollama 모델 선택
+
+https://ollama.com/library/
+
+                </section>
+                <section data-auto-animate data-markdown style="font-size: 0.7em;">
+## Ollama 모델 선택
+
+https://ollama.com/library/
+
+
+### 선택 조건
+* 16GB 이하 메모리
+* 적당한 속도
+* 한국어 지원
+                </section>
+                <section data-markdown style="font-size: 0.6em;">
+## 모델 특징
+
+| 모델명              | 개발사   | 용도                | 크기       | 용량   |
+|---------------------|----------|---------------------|------------|--------|
+| llama3:8b           | Meta     | 범용성 좋고 빠름    | 8B(80억)   | 4.7GB  |
+| qwen2.5:7b          | Alibaba  | 코드 분석에 최적화  | 7B(70억)   | 4.7GB  |
+| DeepSeek-Coder 6.7B | DeepSeek | 코드 분석에 최적화  | 6.7B(67억) | 2.7GB  |
+
+                </section>
+                <section data-markdown style="font-size: 0.7em;">
+## 설치할 모델
+
+* nomic-embed-text: 코드 의미 이해
+* llama3: 문서 생성
+* qwen2.5:7b: 문서 생성
+                </section> 
+                <section>
+                    <h3>Ollama 모델 설치</h3>
+                    <pre><code class="language-bash" data-trim data-noescape>
+$ ollama pull nomic-embed-text
+$ ollama pull llama3
+$ ollama pull qwen2.5:7b
+$ ollama list
+NAME                       ID              SIZE      MODIFIED
+qwen2.5:7b                 845dbda0ea48    4.7 GB    3 hours ago
+nomic-embed-text:latest    0a109f422b47    274 MB    2 days ago
+llama3:latest              365c0bd3c000    4.7 GB    4 days ago
+                    </code></pre>
+                </section>
+            </section>
+
+            <!-- 결과물 -->
+            <section>
+                <h3>문서 생성</h3>
+                <p style="font-size: 0.5em;">http://localhost:3000/</p>
+                <img src="images/Deepwiki_make_doc.png" width="40%"/>
+                <p class="fragment" style="font-size: 0.5em;"><a href="http://localhost:3000/lmk/tetris?type=github&language=kr">http://localhost:3000/lmk/tetris?type=github&language=kr</a></p>
+            </section>
+
+            <!-- 하지만.... -->
+            <section>
+                <h3>하지만....</h3>
+                <ul>
+                    <li class="fragment">오픈소스의 불칠절함 : 설치, 실행, 버그까지..</li>
+                    <li class="fragment">모델별 결과물이 천차만별 : llama3보다 qwen2.5이 더 좋음</li>
+                    <li class="fragment">10% 부족한 산출물: 일부 표깨짐, 부실한 문서</li>
+                    <li class="fragment">느린속도: 좋은 H/W 일수록 빠를 듯..</li>
+                </ul>
+            </section>
+            <section data-auto-animate>
+                <h3>해결책!?</h3>
+                https://github.com/lmk/tetris
+            </section>
+            <section data-auto-animate>
+                <h3>해결책!?</h3>
+                https://<s>github.com</s>/lmk/tetris
+                <br/>
+                <a href="https://github.com/lmk/tetris">https://deepwiki.com/lmk/tetris</a>
+            </section>
+
+            <!-- 마무리 -->
+            <section>
+                <h3>감사합니다!</h3>
+            </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reveal.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/search/search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/highlight/highlight.js"></script>
+
+    <!--
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/search/search.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>    
+    -->
+    
+    <!-- 초기화 스크립트 -->
+    <script>
+        Reveal.initialize({
+            // 설정 옵션
+            hash: true,
+            center: true,
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+            
+            // 슬라이드 번호 표시
+            slideNumber: false,
+            
+            // 진행 바 표시
+            progress: true,
+            
+            // 키보드 네비게이션
+            keyboard: true,
+            
+            // 터치 네비게이션
+            touch: true,
+            
+            // 슬라이드 오버뷰 모드 (ESC 키)
+            overview: true,
+
+            plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ],
+        });
+    </script>
+</body>
+</html>
