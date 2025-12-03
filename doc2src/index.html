@@ -8,13 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/theme/black.css" id="theme">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/highlight/monokai.css">
-    <!-- 
-    <link rel="stylesheet" href="dist/reset.css">
-    <link rel="stylesheet" href="dist/reveal.css">
-    <link rel="stylesheet" href="dist/theme/black.css" id="theme">
-
-    <link rel="stylesheet" href="plugin/highlight/monokai.css">  
-    -->
 </head>
 <body>
     <div class="reveal">
@@ -22,18 +15,18 @@
             <!-- 타이틀 -->
             <section>
                 <h2>코드로 문서 작성 자동화</h2>
-                <h4>AI 활용 삽질기..</h4>
+                <p>AI 활용 삽질기</p>
                 <p>
-                    <small>한솔인티큐브 이명규</small>
+                    <small style="font-size: 0.5em;">25.12.03. <br/><br/>한솔인티큐브 이명규</small>
                 </p>
             </section>
 
             <!-- 소개 -->
             <section>
                 <h3>개발자가 가장 싫어하는 것은?</h3>
-                <p style="font-size: 0.9em;"><span class="fragment">변수명/함수명 짓기 (네이밍)</span></p>
-                <p style="font-size: 0.9em;"><span class="fragment">엉망진창인 코드 유지보수</span></p>
-                <p style="font-size: 0.9em;"><span class="fragment">문서 작성!!</span></p>
+                <p style="font-size: 0.9em;"><span class="fragment fade-in-then-semi-out">변수명/함수명 짓기 (네이밍)</span></p>
+                <p style="font-size: 0.9em;"><span class="fragment fade-in-then-semi-out">엉망진창인 코드 유지보수</span></p>
+                <p style="font-size: 0.9em;"><span class="fragment fade-in-then-semi-out">문서 작성!!</span></p>
             </section>
 
             <!-- deepwiki-open 설명 -->
@@ -171,12 +164,22 @@ llama3:latest              365c0bd3c000    4.7 GB    4 days ago
 
             <!-- 결과물 -->
             <section>
-                <h3>문서 생성</h3>
-                <p style="font-size: 0.5em;">http://localhost:3000/</p>
-                <img src="images/Deepwiki_make_doc.png" width="40%"/>
-                <p class="fragment" style="font-size: 0.5em;"><a href="http://localhost:3000/lmk/tetris?type=github&language=kr">http://localhost:3000/lmk/tetris?type=github&language=kr</a></p>
-            </section>
+                <section>
+                    <h3>문서 생성</h3>
+                    <p style="font-size: 0.5em;">http://localhost:3000/</p>
+                    <img src="images/Deepwiki_make_doc.png" width="40%"/>
+                </section>
 
+                <section>
+                    <h3>채팅 기능</h3>
+                    <img src="images/Deepwiki_chat.png"/>
+                </section>
+                <section>
+                    <h3>실습</h3>
+                    <a href="http://localhost:3000/lmk/tetris?type=github&language=kr">http://localhost:3000/lmk/tetris?type=github&language=kr</a>
+                </section>
+
+            </section>
             <!-- 하지만.... -->
             <section>
                 <h3>하지만....</h3>
@@ -186,6 +189,16 @@ llama3:latest              365c0bd3c000    4.7 GB    4 days ago
                     <li class="fragment">10% 부족한 산출물: 일부 표깨짐, 부실한 문서</li>
                     <li class="fragment">느린속도: 좋은 H/W 일수록 빠를 듯..</li>
                 </ul>
+                <aside class="notes">
+                    <pre><code class="language-markdown">
+- 설치 과정에 시행착오가 많았음. python 버전 및 library의존성 문제 등.
+- ollama를 사용할경우 버그 때문에 500에러 발생함. 결과를 받아 처리하는 python 코드 수정해야함.
+- 결국 간단하게 docker로 실행하지 못하고, 직접 설치/실행해야 했음.
+- meta 모델보다 qwen2.5이 퀄리티가 더 좋음.. 용량 큰 다른 모델의 결과도 기대됨... 하지만 시간이..
+- 결과문서가 부실하고, 일부 표가 깨지까지.
+- 문서화 및 채팅이 엄첨 느림.. ollama를 cpu만 사용해서 그런듯..
+                    </code></pre>
+                </aside>
             </section>
             <section data-auto-animate>
                 <h3>해결책!?</h3>
@@ -193,7 +206,7 @@ llama3:latest              365c0bd3c000    4.7 GB    4 days ago
             </section>
             <section data-auto-animate>
                 <h3>해결책!?</h3>
-                https://<s>github.com</s>/lmk/tetris
+                https://<s>github</s>.com/lmk/tetris
                 <br/>
                 <a href="https://github.com/lmk/tetris">https://deepwiki.com/lmk/tetris</a>
             </section>
@@ -214,15 +227,6 @@ llama3:latest              365c0bd3c000    4.7 GB    4 days ago
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/markdown/markdown.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/highlight/highlight.js"></script>
 
-    <!--
-    <script src="dist/reveal.js"></script>
-    <script src="plugin/zoom/zoom.js"></script>
-    <script src="plugin/notes/notes.js"></script>
-    <script src="plugin/search/search.js"></script>
-    <script src="plugin/markdown/markdown.js"></script>
-    <script src="plugin/highlight/highlight.js"></script>    
-    -->
-    
     <!-- 초기화 스크립트 -->
     <script>
         Reveal.initialize({
